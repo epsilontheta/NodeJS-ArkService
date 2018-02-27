@@ -1,6 +1,5 @@
 /*jshint esversion: 6 */
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.cached.Database('./players.sqlite');
 var fs = require('fs');
 var https = require('https');
 var start = Date.now();
@@ -13,12 +12,21 @@ var options = {
 var bodyParser = require('body-parser');
 var path = require('path');
 const crypto = require('crypto');
-const serverConfig = require("./lib/config.js");
 
-const api_settings = serverConfig.api_settings;
-const server_settings = serverConfig.server_settings;
+if(process.argv.length === 4){
+	var action =  process.argv[2];
+	var config_file = process.argv[3];
+} else {
+	console.log("Usage: node index.js start settings.json");
+	process.exit();
+}
 
-var authModel = require("./lib/authmodel.js");
+const serverConfig = require("./lib/config.js")({"config_file": config_file});
+const settings = serverConfig.settings;
+
+var db = new sqlite3.cached.Database(settings.server_settings.db_file);
+
+var authModel = require("./lib/authmodel.js")(settings);
 function checkHash(key, res, cb) {
     //.update('sdblas%ew5@trast')
 
@@ -35,10 +43,10 @@ function checkHash(key, res, cb) {
     });
     // return false;
 }
-var arkdata = require('arkdata');
+var arkdata = require('arkdata')(settings);
 var player = arkdata.player;
 var tribe = arkdata.tribe;
-var routes = require("./lib/routes.js");
+var routes = require("./lib/routes.js")(settings);
 
 
 
@@ -129,7 +137,7 @@ module.exports.startServer = function() {
 
     });
 };
-if(process.argv.length === 3 && process.argv[2] === "start"){
+if(action === "start"){
 	module.exports.startServer();
 }
 
