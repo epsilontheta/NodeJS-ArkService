@@ -52,12 +52,12 @@ var routes = require("./lib/routes.js")(settings);
 
 function setupAccessControl() {
     return new Promise((r, rj) => {
-        if (settings.server_settings.use_ajax) {
+        if (settings.server_config.use_ajax) {
             app.use(function(req, res, next) {
 
                 // Website you wish to allow to connect
                 // Only set this if you wish to use AJAX instead of PHP to communicate
-                res.setHeader('Access-Control-Allow-Origin', settings.server_settings.allowed_server);
+                res.setHeader('Access-Control-Allow-Origin', settings.server_config.allowed_server);
 
                 // Request methods you wish to allow
                 res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -118,15 +118,15 @@ module.exports.startServer = function() {
             extended: true
         })); // support encoded
         var server = app.listen({
-            host: settings.server_settings.host,
-            port: settings.server_settings.port
+            host: settings.server_config.host,
+            port: settings.server_config.port
         }, function() {
 			console.log("Time to start: ", (Math.round(Date.now() - start)  / 1000) + "s");
-            console.log("Ark Query Server Up At http://%s:%s", server.address().address, settings.server_settings.port);
+            console.log("Ark Query Server Up At http://%s:%s", server.address().address, settings.server_config.port);
         });
         // var server = http.createServer(app).listen({
-        //     host: settings.server_settings.host,
-        //     port: settings.server_settings.port
+        //     host: settings.server_config.host,
+        //     port: settings.server_config.port
         // }, function() {
         //     var host = server.address().address;
         //     var port = server.address().port;
