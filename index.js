@@ -23,8 +23,6 @@ if(process.argv.length === 4){
 
 const serverConfig = require("./lib/config.js")({"config_file": config_file});
 const settings = serverConfig.settings;
-console.log(JSON.stringify(settings));
-process.exit();
 
 var db = new sqlite3.cached.Database(settings.server_config.db_file);
 
