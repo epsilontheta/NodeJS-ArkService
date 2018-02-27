@@ -30,7 +30,7 @@ var authModel = require("./lib/authmodel.js")(settings);
 function checkHash(key, res, cb) {
     //.update('sdblas%ew5@trast')
 
-    var hash = crypto.createHmac(api_settings.hash_type, api_settings.secret)
+    var hash = crypto.createHmac(settings.api_settings.hash_type, settings.api_settings.secret)
         .update(key)
         .digest('hex');
     authModel.getKey(hash, function(d) {
@@ -52,12 +52,12 @@ var routes = require("./lib/routes.js")(settings);
 
 function setupAccessControl() {
     return new Promise((r, rj) => {
-        if (server_settings.use_ajax) {
+        if (settings.server_settings.use_ajax) {
             app.use(function(req, res, next) {
 
                 // Website you wish to allow to connect
                 // Only set this if you wish to use AJAX instead of PHP to communicate
-                res.setHeader('Access-Control-Allow-Origin', server_settings.allowed_server);
+                res.setHeader('Access-Control-Allow-Origin', settings.server_settings.allowed_server);
 
                 // Request methods you wish to allow
                 res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -118,15 +118,15 @@ module.exports.startServer = function() {
             extended: true
         })); // support encoded
         var server = app.listen({
-            host: server_settings.host,
-            port: server_settings.port
+            host: settings.server_settings.host,
+            port: settings.server_settings.port
         }, function() {
 			console.log("Time to start: ", (Math.round(Date.now() - start)  / 1000) + "s");
-            console.log("Ark Query Server Up At http://%s:%s", server.address().address, server_settings.port);
+            console.log("Ark Query Server Up At http://%s:%s", server.address().address, settings.server_settings.port);
         });
         // var server = http.createServer(app).listen({
-        //     host: server_settings.host,
-        //     port: server_settings.port
+        //     host: settings.server_settings.host,
+        //     port: settings.server_settings.port
         // }, function() {
         //     var host = server.address().address;
         //     var port = server.address().port;
